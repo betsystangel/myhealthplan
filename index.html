@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>MyHealthPath Prototype</title>
+<style>
+:root{
+  --navy:#123a63; --blue:#2f86c8; --teal:#2a9a92; --green:#82bf91;
+  --sky:#eef7fd; --mint:#eef8f3; --rose:#fff3f1; --lav:#f3f2fb;
+  --ink:#15334f; --muted:#6c7f91; --line:#dce8ef; --white:#fff;
+  --shadow:0 10px 28px rgba(18,58,99,.10);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#eaf1f5;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink)}
+.phone{width:min(100vw,430px);min-height:100vh;margin:0 auto;background:#fff;position:relative;box-shadow:0 0 40px rgba(0,0,0,.14);padding-bottom:82px}
+.status{height:28px;padding:8px 18px 0;font-size:12px;font-weight:700;display:flex;justify-content:space-between;color:#0d2740}
+.header{padding:8px 18px 14px;border-bottom:1px solid #edf2f5;background:#fff;position:sticky;top:0;z-index:10}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:38px;height:38px;border-radius:13px;background:linear-gradient(135deg,#b7dfbc,#2fa39c);display:grid;place-items:center;color:white;font-size:22px;box-shadow:var(--shadow)}
+.brand-title{font-size:25px;font-weight:800;color:var(--navy);letter-spacing:-.7px}
+.brand-title span{color:#2f9ed0}
+.tagline{font-size:10px;letter-spacing:2px;color:var(--muted);margin-top:2px}
+.page{display:none;padding:18px}.page.active{display:block}
+.backrow{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.back{color:var(--blue);text-decoration:none;font-weight:700;font-size:14px;border:0;background:#eef6fb;padding:10px 12px;border-radius:12px;cursor:pointer}
+.title{font-size:30px;line-height:1.05;margin:8px 0 5px;color:var(--navy);letter-spacing:-.8px}
+.subtitle{font-size:15px;color:var(--muted);line-height:1.45;margin:0 0 16px}
+.hero{min-height:180px;border-radius:26px;padding:24px;display:flex;flex-direction:column;justify-content:flex-end;background:radial-gradient(circle at 25% 25%,rgba(255,255,255,.85),transparent 32%),linear-gradient(155deg,#dff1fb 0%,#dfeff4 45%,#cce8d3 100%);position:relative;overflow:hidden;box-shadow:var(--shadow);margin-bottom:18px}
+.hero:before{content:"";position:absolute;left:-10%;right:-10%;bottom:-56px;height:140px;background:linear-gradient(160deg,transparent 0 22%,rgba(65,120,95,.14) 22% 35%,transparent 35% 46%,rgba(39,78,105,.18) 46% 59%,transparent 59%)}
+.hero h1{margin:0 0 8px;font-size:31px;color:var(--navy);z-index:1}
+.hero p{margin:0;color:#365d72;font-size:15px;z-index:1;max-width:290px;line-height:1.45}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tile{border:0;text-align:left;color:var(--ink);border-radius:20px;min-height:135px;padding:18px;display:flex;flex-direction:column;box-shadow:var(--shadow);border:1px solid rgba(18,58,99,.04);cursor:pointer}
+.sky{background:var(--sky)} .mint{background:var(--mint)} .rose{background:var(--rose)} .lav{background:var(--lav)}
+.icon{width:42px;height:42px;border-radius:14px;background:rgba(255,255,255,.86);display:grid;place-items:center;font-size:22px;margin-bottom:18px}
+.tile strong{font-size:17px;color:var(--navy);line-height:1.15}
+.tile span{font-size:12px;color:var(--muted);margin-top:5px;line-height:1.3}
+.card{border-radius:20px;padding:17px;margin:12px 0;box-shadow:var(--shadow);border:1px solid #edf3f6;background:#fff}
+.card h3{margin:0 0 12px;font-size:18px;color:var(--navy)}
+.label{display:block;font-size:12px;color:var(--muted);font-weight:700;margin:12px 0 6px}
+input,textarea,select{width:100%;border:1px solid var(--line);background:#fff;border-radius:13px;padding:12px 13px;font:inherit;color:var(--ink)}
+textarea{min-height:92px;resize:vertical}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tabs{display:flex;gap:7px;overflow:auto;padding-bottom:2px;margin-bottom:12px}
+.tab{white-space:nowrap;padding:9px 12px;border-radius:999px;background:#eff5f8;color:var(--muted);font-size:12px}
+.tab.active{background:#d9eefb;color:var(--navy);font-weight:700}
+.action{display:inline-block;border:none;border-radius:14px;padding:12px 16px;background:linear-gradient(135deg,var(--teal),var(--blue));color:#fff;font-weight:700;text-decoration:none;cursor:pointer}
+.action.full{width:100%;text-align:center;margin-top:12px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}.chip{padding:9px 11px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:12px;color:var(--ink)}
+.checks label{display:flex;gap:10px;align-items:flex-start;padding:11px 0;border-bottom:1px solid #edf2f4}.checks label:last-child{border-bottom:none}
+.timeline{position:relative}.titem{display:grid;grid-template-columns:18px 1fr;gap:10px;padding-bottom:18px;position:relative}.titem:before{content:"";width:12px;height:12px;border-radius:50%;background:var(--teal);margin-top:5px}.titem:not(:last-child):after{content:"";position:absolute;left:5px;top:19px;width:2px;height:calc(100% - 6px);background:#d6e6ec}.titem strong{color:var(--navy)}
+.note{font-size:12px;color:var(--muted);line-height:1.45}.banner{border-radius:18px;padding:14px 16px;background:linear-gradient(135deg,#edf7fd,#edf8f3);color:var(--navy);font-weight:700;text-align:center;margin:14px 0}
+.qrow{display:flex;gap:8px;align-items:flex-end;margin-bottom:10px}.qrow .qinput{flex:1}.remove{border:0;background:#fff0ef;color:#9b4f4f;border-radius:10px;width:40px;height:40px;font-size:20px;cursor:pointer}
+.bottom{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:min(100vw,430px);display:grid;grid-template-columns:repeat(4,1fr);background:rgba(255,255,255,.98);border-top:1px solid #e4edf2;padding:8px 6px calc(12px + env(safe-area-inset-bottom));z-index:20}
+.bottom button{border:0;background:transparent;color:var(--muted);font-size:10px;text-align:center;cursor:pointer}.bottom button span{display:block;font-size:20px;margin-bottom:3px}.bottom button.active{color:var(--blue);font-weight:700}
+.small{font-size:11px;color:var(--muted)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:90px;background:#15334f;color:#fff;border-radius:999px;padding:10px 14px;font-size:12px;opacity:0;transition:.2s;z-index:50}.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="status"><span>9:41</span><span>●●● Wi-Fi ▰</span></div>
+  <div class="header">
+    <div class="brand"><div class="logo">🌿</div><div><div class="brand-title">My<span>Health</span>Path</div><div class="tagline">KNOW • PREPARE • ASK • TRACK • TAKE CHARGE</div></div></div>
+  </div>
+  <main>
+    <section id="home" class="page active">
+      <div class="hero"><h1>Hi, Kiersten!</h1><p>Your health. Your journey. Build the life skills to manage both with confidence.</p></div>
+      <div class="grid">
+        <button class="tile sky" onclick="go('snapshot')"><div class="icon">🩺</div><strong>My Health Snapshot</strong><span>Key information in one place</span></button>
+        <button class="tile mint" onclick="go('appointment')"><div class="icon">📅</div><strong>Before My Appointment</strong><span>Walk in prepared</span></button>
+        <button class="tile rose" onclick="go('questions')"><div class="icon">❓</div><strong>My Questions</strong><span>Ask. Learn. Advocate.</span></button>
+        <button class="tile sky" onclick="go('visit')"><div class="icon">📝</div><strong>Visit Notes</strong><span>Capture what matters</span></button>
+        <button class="tile mint" onclick="go('steps')"><div class="icon">✅</div><strong>My Next Steps</strong><span>Stay on track</span></button>
+        <button class="tile lav" onclick="go('timeline')"><div class="icon">📈</div><strong>My Health Timeline</strong><span>See your progress</span></button>
+      </div>
+      <div class="banner">Small steps build confident, independent health habits.</div>
+      <p class="note">Prototype only. Use fictional information while testing. This tool is for organization and self-advocacy, not diagnosis or medical advice.</p>
+    </section>
+
+    <section id="snapshot" class="page">
+      <div class="backrow"><button class="back" onclick="go('home')">← Home</button><span class="small">Draft Prototype</span></div>
+      <h1 class="title">My Health Snapshot</h1><p class="subtitle">Key information in one place so you feel prepared and confident.</p>
+      <div class="tabs"><div class="tab active">Overview</div><div class="tab">Medications</div><div class="tab">Allergies</div><div class="tab">History</div><div class="tab">Insurance</div></div>
+      <div class="card sky"><h3>Personal Information</h3><div class="two"><div><span class="label">Name</span><input data-key="name" value="Sample Student"></div><div><span class="label">Date of Birth</span><input data-key="dob" placeholder="MM/DD/YYYY"></div></div><span class="label">Emergency Contact</span><input data-key="emergency" placeholder="Name + relationship + phone"></div>
+      <div class="card mint"><h3>Healthcare Providers</h3><span class="label">Primary Care Provider</span><input data-key="pcp" placeholder="Provider name"><span class="label">Specialist(s)</span><input data-key="specialists" placeholder="Names / specialties"></div>
+      <div class="card rose"><h3>Pharmacy</h3><input data-key="pharmacy" placeholder="Pharmacy + phone"></div>
+      <div class="card lav"><h3>Insurance</h3><span class="label">Insurance Company</span><input data-key="insurance" placeholder="Company name"><span class="label">Where do I find my card?</span><input data-key="insurance_card" placeholder="Wallet app, physical card, etc."></div>
+      <button class="action full" onclick="save()">Save Snapshot</button>
+    </section>
+
+    <section id="appointment" class="page">
+      <div class="backrow"><button class="back" onclick="go('home')">← Home</button><span class="small">Step 1 of 4</span></div>
+      <h1 class="title">Before My Appointment</h1><p class="subtitle">Take a few minutes to organize what you want your provider to understand.</p>
+      <div class="tabs"><div class="tab active">Symptoms</div><div class="tab">History</div><div class="tab">Questions</div><div class="tab">Review</div></div>
+      <div class="card mint"><span class="label">Why am I going?</span><textarea data-key="reason" placeholder="Reason for this visit"></textarea><span class="label">What am I experiencing?</span><textarea data-key="symptoms" placeholder="Symptoms or changes"></textarea><div class="two"><div><span class="label">When did it start?</span><input data-key="start" placeholder="Date / approximate"></div><div><span class="label">How often?</span><input data-key="frequency" placeholder="Daily, weekly..."></div></div><span class="label">What makes it better or worse?</span><textarea data-key="betterworse" placeholder="Activity, rest, food, stress..."></textarea><span class="label">What do I want to understand before I leave?</span><textarea data-key="goal"></textarea></div>
+      <button class="action full" onclick="save()">Save Appointment Prep</button>
+    </section>
+
+    <section id="questions" class="page">
+      <div class="backrow"><button class="back" onclick="go('home')">← Home</button><span class="small">Ask • Learn • Advocate</span></div>
+      <h1 class="title">My Questions</h1><p class="subtitle">Add as many questions as you need before your appointment.</p>
+      <div class="card rose"><h3>My Questions</h3><p class="note">Keep adding questions until you have everything you want to remember.</p><div id="questionList"></div><button class="action full" type="button" onclick="addQuestion()">+ Add Another Question</button></div>
+      <div class="card sky"><h3>Questions to Consider</h3><div class="chips"><div class="chip">What else could explain this?</div><div class="chip">What are we trying to rule out?</div><div class="chip">What should I expect next?</div><div class="chip">What happens if this does not improve?</div><div class="chip">Are there other options?</div><div class="chip">When should I follow up?</div><div class="chip">Can you explain that differently?</div><div class="chip">What should I track?</div></div></div>
+      <button class="action full" onclick="save()">Save Questions</button>
+    </section>
+
+    <section id="visit" class="page">
+      <div class="backrow"><button class="back" onclick="go('home')">← Home</button><span class="small">Capture what matters</span></div>
+      <h1 class="title">Visit Notes</h1><p class="subtitle">Record what happened so you do not have to remember everything later.</p>
+      <div class="card sky"><span class="label">What did my provider tell me?</span><textarea data-key="provider_told"></textarea><span class="label">Tests ordered</span><textarea data-key="tests"></textarea><span class="label">Medication changes</span><textarea data-key="med_changes"></textarea><span class="label">Instructions I was given</span><textarea data-key="instructions"></textarea><span class="label">Questions I still have</span><textarea data-key="remaining_questions"></textarea></div>
+      <button class="action full" onclick="save()">Save Visit Notes</button>
+    </section>
+
+    <section id="steps" class="page">
+      <div class="backrow"><button class="back" onclick="go('home')">← Home</button><span class="small">Stay on track</span></div>
+      <h1 class="title">My Next Steps</h1><p class="subtitle">Turn the visit into a clear plan you can manage yourself.</p>
+      <div class="card mint checks"><label><input type="checkbox" data-key="rx"> Fill or pick up a prescription</label><label><input type="checkbox" data-key="labs"> Schedule testing or lab work</label><label><input type="checkbox" data-key="followup"> Schedule a follow-up appointment</label><label><input type="checkbox" data-key="specialist"> Schedule a specialist</label><label><input type="checkbox" data-key="portal"> Send a patient portal message</label><label><input type="checkbox" data-key="records"> Obtain records</label><label><input type="checkbox" data-key="track"> Track symptoms</label></div>
+      <div class="card"><span class="label">Other next step</span><input data-key="other_step"><span class="label">By when?</span><input type="date" data-key="due"><span class="label">If I do not hear back, when should I follow up?</span><input type="date" data-key="followup_date"></div>
+      <button class="action full" onclick="save()">Save Next Steps</button>
+    </section>
+
+    <section id="timeline" class="page">
+      <div class="backrow"><button class="back" onclick="go('home')">← Home</button><span class="small">See the bigger picture</span></div>
+      <h1 class="title">My Health Timeline</h1><p class="subtitle">Keep a simple chronological record of important health events and follow-up.</p>
+      <div class="card sky timeline"><div class="titem"><div><strong>Sept 15</strong><div class="small">Primary care visit — sample entry</div></div></div><div class="titem"><div><strong>Aug 3</strong><div class="small">Lab work — sample entry</div></div></div><div class="titem"><div><strong>June 12</strong><div class="small">Specialist visit — sample entry</div></div></div></div>
+      <div class="card"><h3>Add an Entry</h3><div class="two"><div><span class="label">Date</span><input type="date" data-key="timeline_date"></div><div><span class="label">Type</span><select data-key="timeline_type"><option>Doctor Visit</option><option>Lab/Test</option><option>Medication Change</option><option>Procedure</option><option>Other</option></select></div></div><span class="label">What happened?</span><textarea data-key="timeline_event"></textarea><span class="label">What did I learn?</span><textarea data-key="timeline_learned"></textarea><span class="label">What is the next step?</span><textarea data-key="timeline_next"></textarea></div>
+      <button class="action full" onclick="save()">Save Timeline Entry</button>
+    </section>
+  </main>
+  <div class="bottom"><button data-nav="home" class="active" onclick="go('home')"><span>⌂</span>Home</button><button data-nav="snapshot" onclick="go('snapshot')"><span>🩺</span>My Health</button><button data-nav="questions" onclick="go('questions')"><span>❓</span>Questions</button><button data-nav="timeline" onclick="go('timeline')"><span>📈</span>Timeline</button></div>
+</div>
+<div class="toast" id="toast">Saved on this device</div>
+<script>
+const KEY='myhealthpath-v4';
+function go(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.bottom button').forEach(b=>b.classList.toggle('active',b.dataset.nav===id));location.hash=id;window.scrollTo({top:0,behavior:'smooth'});}
+function save(){saveQuestions();const d={};document.querySelectorAll('[data-key]').forEach(el=>{d[el.dataset.key]=el.type==='checkbox'?el.checked:el.value});localStorage.setItem(KEY,JSON.stringify(d));const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1200);}
+function load(){const raw=localStorage.getItem(KEY);if(raw){try{const d=JSON.parse(raw);document.querySelectorAll('[data-key]').forEach(el=>{if(d[el.dataset.key]!==undefined){if(el.type==='checkbox')el.checked=!!d[el.dataset.key];else el.value=d[el.dataset.key]}})}catch(e){}}renderQuestions();const h=location.hash.replace('#','');if(h&&document.getElementById(h))go(h);}
+function getQuestions(){try{const saved=JSON.parse(localStorage.getItem(KEY+'-questions')||'[]');return Array.isArray(saved)?saved:[]}catch(e){return[]}}
+function saveQuestions(){const qs=[...document.querySelectorAll('.dynamic-question')].map(el=>el.value);localStorage.setItem(KEY+'-questions',JSON.stringify(qs));}
+function renderQuestions(){const list=document.getElementById('questionList');if(!list)return;let qs=getQuestions();if(qs.length===0)qs=['','',''];list.innerHTML='';qs.forEach((q,i)=>{const wrap=document.createElement('div');wrap.className='qrow';wrap.innerHTML=`<div class="qinput"><span class="label">Question ${i+1}</span><input class="dynamic-question" value="${String(q).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}" placeholder="${i===0?'What do I most need answered?':'Add another question'}" oninput="saveQuestions()"></div><button type="button" class="remove" onclick="removeQuestion(${i})">×</button>`;list.appendChild(wrap);});}
+function addQuestion(){let qs=[...document.querySelectorAll('.dynamic-question')].map(el=>el.value);if(qs.length===0)qs=getQuestions();qs.push('');localStorage.setItem(KEY+'-questions',JSON.stringify(qs));renderQuestions();setTimeout(()=>{const inputs=document.querySelectorAll('.dynamic-question');if(inputs.length)inputs[inputs.length-1].focus()},20);}
+function removeQuestion(i){const qs=[...document.querySelectorAll('.dynamic-question')].map(el=>el.value);qs.splice(i,1);localStorage.setItem(KEY+'-questions',JSON.stringify(qs));renderQuestions();}
+window.addEventListener('DOMContentLoaded',load);
+</script>
+</body>
+</html>
